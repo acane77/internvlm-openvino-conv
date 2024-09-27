@@ -12,7 +12,7 @@ pt_model_id = "E:/Models/" + model_id
 model_dir = pt_model_id + "-int4-openvino"
 model_dir = Path(model_dir)
 
-device = "CPU"
+device = "GPU"
 tokenizer = AutoTokenizer.from_pretrained(model_dir, trust_remote_code=True)
 ov_model = OVInternVLChatModel(model_dir, device)
 
@@ -26,10 +26,12 @@ if not EXAMPLE_IMAGE.exists():
 
 pixel_values = load_image(EXAMPLE_IMAGE, max_num=12)
 
+print("pixel values:", pixel_values.shape)
+
 streamer = TextIteratorStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
 
 generation_config = dict(max_new_tokens=100, do_sample=True, streamer=streamer)
-question = "<image>\nPlease describe the image shortly."
+question = "<image>\n请简单描述下这个图片."
 
 print(f"User: {question}\n")
 print("Assistant:")
